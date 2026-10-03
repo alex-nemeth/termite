@@ -13,11 +13,24 @@ const TERMINAL_COLUMNS: u16 = 104;
 const CELL_WIDTH: f32 = 9.0;
 const CELL_HEIGHT: f32 = 18.0;
 const VIEW_PADDING: f32 = 24.0;
+const TERMINAL_FONT: Font = Font::with_name("JetBrains Mono");
 
 fn main() -> iced::Result {
+    let icon = iced::window::icon::from_rgba(
+        include_bytes!("assets/termite-icon.rgba").to_vec(),
+        128,
+        128,
+    )
+    .map_err(|error| iced::Error::WindowCreationFailed(Box::new(error)))?;
+
     iced::application(Terminal::new, Terminal::update, Terminal::view)
         .title("Termite")
-        .window_size(iced::Size::new(960.0, 640.0))
+        .window(iced::window::Settings {
+            size: iced::Size::new(960.0, 640.0),
+            icon: Some(icon),
+            ..Default::default()
+        })
+        .font(include_bytes!("assets/JetBrainsMono-Regular.ttf").as_slice())
         .theme(|_: &Terminal| Theme::Dark)
         .subscription(|_| {
             Subscription::batch([
@@ -171,7 +184,7 @@ impl Terminal {
 
     fn view(&self) -> Element<'_, Message> {
         let screen = text(screen_contents(&self.parser))
-            .font(Font::MONOSPACE)
+            .font(TERMINAL_FONT)
             .size(15)
             .color(Color::WHITE);
 
@@ -179,7 +192,7 @@ impl Terminal {
             column![
                 screen,
                 text(status)
-                    .font(Font::MONOSPACE)
+                    .font(TERMINAL_FONT)
                     .size(13)
                     .color(Color::WHITE)
             ]
