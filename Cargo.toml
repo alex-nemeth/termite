@@ -1,0 +1,11 @@
+[package]
+name = "termite"
+version = "0.1.0"
+edition = "2024"
+
+[[bin]]
+name = "termix"
+path = "main.rs"
+
+[dependencies]
+iced = "0.14"
